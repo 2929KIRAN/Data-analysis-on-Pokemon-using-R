@@ -1,0 +1,255 @@
+---
+title: "Pokemon"
+author: "kiran jangili"
+date: "2024-08-02"
+output: html_document
+---
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
+
+# Analysing the Pokemon dataset
+
+## loading the dataset
+
+```{r}
+Pokemon<-read.csv("E:/kiran jangili/Data analysis/Datasets/Pokemon.csv")
+View(Pokemon)
+```
+
+## checking for number of rows and columns
+
+```{r}
+nrow(Pokemon)
+ncol(Pokemon)
+```
+
+## tabulation of categorical columns
+
+```{r}
+table(Pokemon$is_legendary)
+table(Pokemon$generation)
+table(Pokemon$type1)
+table(Pokemon$type2)
+
+```
+
+## min-max HP
+
+```{r }
+min(Pokemon$hp)
+max(Pokemon$hp)
+```
+
+## min-max Speed
+
+```{r}
+min(Pokemon$speed)
+max(Pokemon$speed)
+```
+
+## checking for null values
+
+```{r}
+sum(is.na(Pokemon$abilities))
+```
+
+## Renaming Column Names
+
+```{r}
+colnames(Pokemon)[colnames(Pokemon)=='type1'] <-"Primary_type"
+colnames(Pokemon)[colnames(Pokemon)=='type2'] <-"Secondary_type"
+colnames(Pokemon)[colnames(Pokemon)=='name'] <-"Pokemon_name"
+head(Pokemon)
+```
+
+## Grass-Pokemon
+
+```{r}
+library(dplyr)
+
+Pokemon %>% 
+  filter(Primary_type== "grass") -> grass_pokemon
+head(grass_pokemon)
+
+```
+
+## Min and Max speed
+
+```{r}
+min(grass_pokemon$speed)
+max(grass_pokemon$speed)
+```
+
+## Mean Special attack and defence
+
+```{r}
+mean(grass_pokemon$sp_attack) 
+mean(grass_pokemon$sp_defense)
+```
+
+## Visualizing stats of grass Pokemon
+
+```{r}
+library(ggplot2)
+
+ggplot(data=grass_pokemon , aes(x=hp))+geom_histogram(fill="palegreen4")
+```
+
+## Height
+
+```{r}
+ggplot(data=grass_pokemon , aes(x=height_m))+geom_histogram()
+```
+
+## Weight
+
+```{r}
+ggplot(data=grass_pokemon , aes(x=weight_kg))+geom_histogram()
+```
+
+## Legendary vs Non-Legendary
+
+```{r}
+ggplot(data=grass_pokemon , aes(x=is_legendary))+geom_bar()
+
+```
+
+# Fire Pokemon
+
+```{r}
+Pokemon %>%
+  filter(Primary_type=='fire')-> fire_pokemon
+head(fire_pokemon)
+```
+
+## Min and Max Speed
+
+```{r}
+min(fire_pokemon$speed) #20
+max(fire_pokemon$speed) #126
+
+```
+
+## Mean Special attack and defence
+
+```{r}
+mean(fire_pokemon$sp_attack)  #87
+mean(fire_pokemon$sp_defense)  #71
+```
+
+## visualization of grass pokemon
+
+```{r}
+ggplot(data=fire_pokemon , aes(x=hp ))+geom_histogram(fill='orange1', bins=30)
+```
+
+## Generation
+
+```{r}
+ggplot(data=fire_pokemon, aes(x=generation ,fill=as.factor(generation)))+ geom_bar()
+```
+
+## secondary_type
+
+```{r}
+ggplot(data=fire_pokemon , aes(x=Secondary_type, fill = Secondary_type))+geom_bar()
+```
+
+## sp_attack vs sp_defence
+
+```{r}
+ggplot(data=fire_pokemon, aes(x=sp_attack,y=sp_defense))+geom_point(col='coral')
+```
+
+## height vs weight
+
+```{r}
+ggplot(data=fire_pokemon, aes(x=height_m,y=weight_kg))+geom_point(col='orange1' )
+```
+
+## water pokemon
+
+```{r}
+Pokemon %>%
+  filter(Primary_type=='water')-> water_pokemon
+head(water_pokemon)
+```
+
+## min-max speed
+
+```{r}
+min(water_pokemon$speed)
+max(water_pokemon$speed)
+```
+
+## mean sp
+
+```{r}
+mean(water_pokemon$sp_attack) #74
+mean(water_pokemon$sp_defense) #71
+```
+
+## visualization of water pokemon
+
+### Against ice
+
+```{r}
+ggplot(data=water_pokemon,aes(x=against_ice))+geom_histogram(bins=30)
+```
+
+### Against poison
+
+```{r}
+ggplot(data=water_pokemon,aes(x=against_poison))+geom_histogram(bins=30)
+```
+
+### against grass
+
+```{r}
+ggplot(data=water_pokemon,aes(x=against_grass))+geom_histogram(bins=30)
+```
+
+## physchic pokemon
+
+```{r}
+Pokemon %>%
+  filter(Primary_type=='psychic')-> psychic_pokemon
+head(psychic_pokemon)
+```
+
+### min-max sp
+
+```{r}
+min(psychic_pokemon$sp_attack)  #23
+max(psychic_pokemon$sp_defense) #154
+```
+
+### min -max speed
+
+```{r}
+min(psychic_pokemon$speed) #20
+max(psychic_pokemon$speed) #180
+```
+
+## Visualizing psychic pokemon
+
+```{r}
+ggplot(data=psychic_pokemon,aes(x=base_total))+geom_histogram(fill='hotpink' , bins=30)
+```
+
+## Comparison of Special Defence
+
+```{r}
+ggplot(data = psychic_pokemon, aes(x=as.factor(generation), y=sp_defense , fill = generation))+geom_boxplot()
+
+```
+
+### How many psychic pokemon are legendery
+
+```{r}
+ggplot(data=psychic_pokemon,aes(x=is_legendary))+geom_bar()
+```
